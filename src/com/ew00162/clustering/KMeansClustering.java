@@ -5,8 +5,6 @@ package com.ew00162.clustering;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -15,8 +13,8 @@ import java.util.concurrent.ThreadLocalRandom;
  *         The goal of clustering is to automatically find groups that are
  *         similar and 'cluster' them These groups are 'clusters'
  *
- *         K-Means has two main parameters - a dataset and a positive integer K
- *         K represents the number of clusters to be extracted from the dataset
+ *         K-Means has one main parameter:
+ *         K - a positive integer that represents the number of clusters to be extracted from the dataset
  * 
  *         STEP 1: Pick a number of clusters K
  *         STEP 2: Make K points at randomised locations - these will be the centroids
@@ -28,8 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class KMeansClustering {
 
-	// STEP 1
-	// Pick a number of clusters K
+	// STEP 1 Pick a number of clusters K
 	private int K = 0;
 
 	// Max X and Y bounds of graph
@@ -52,7 +49,7 @@ public class KMeansClustering {
 	}
 
 	// List of centroids
-	// centroids.size() is K
+	// centroids.size() is the same as K
 	private ArrayList<Point2D.Double> centroids = new ArrayList<Point2D.Double>();
 
 	/**
@@ -63,7 +60,7 @@ public class KMeansClustering {
 	}
 
 	// List of nearest centroids
-	// index(i) of this is the nearest centroid for index(i) of points
+	// index(i) of nearestCentroids is the nearest centroid for index(i) of points
 	private ArrayList<Point2D.Double> nearestCentroids = new ArrayList<Point2D.Double>();
 
 	/**
@@ -73,7 +70,7 @@ public class KMeansClustering {
 		return nearestCentroids;
 	}
 
-	// Centroids changed?
+	// For keeping track of if the centroids have changed
 	private boolean changed = false;
 
 	/**
@@ -88,8 +85,7 @@ public class KMeansClustering {
 	 */
 	public KMeansClustering(int k, double maxY, double maxX, double originX, double originY, ArrayList<Point2D.Double> points) {
 		super();
-		// STEP 1
-		K = k;
+		this.K = k;
 		this.maxY = maxY;
 		this.maxX = maxX;
 		this.originX = originX;
@@ -98,11 +94,7 @@ public class KMeansClustering {
 	}
 
 	/**
-	 * STEP 2 Make K points at randomised locations These are the centroids
-	 * 
-	 * @param K
-	 * @param maxY
-	 * @param maxX
+	 * STEP 2 Make K points at randomised locations, such that these are the initial centroids
 	 */
 	public void createCentroids() {
 
@@ -130,25 +122,23 @@ public class KMeansClustering {
 	 * 
 	 * @param pointA
 	 * @param pointB
-	 * @return distance
+	 * @return distance between the two points
 	 */
 	public double euclideanDistance(Point2D.Double pointA, Point2D.Double pointB) {
 
 		double distance = 0.0;
 
-		// d(p,q) = sqrt(((p1 - q1)^2) + ((p2 - q2)^2))
-		distance = Math
-				.sqrt(Math.pow((pointA.getX() - pointB.getX()), 2) + Math.pow((pointA.getY() - pointB.getY()), 2));
+		distance = Math.sqrt(Math.pow((pointA.getX() - pointB.getX()), 2) + Math.pow((pointA.getY() - pointB.getY()), 2));
 
 		return distance;
 	}
 
 	/**
-	 * STEP 3 and STEP 4 Calculate Euclidean distance from each point to all
-	 * centroids Assign each point to its nearest centroid
+	 * STEP 3 and STEP 4 Calculate Euclidean distance from each point to all centroids 
+	 * Assign each point to its nearest centroid
 	 * 
 	 * @param point
-	 * @return nearestCentroid
+	 * @return nearestCentroid for the input point
 	 */
 	public Point2D.Double calculateNearestCentroid(Point2D.Double point) {
 
@@ -169,21 +159,20 @@ public class KMeansClustering {
 	}
 
 	/**
-	 * Calculate new centroid of a cluster recursively until it does not change
+	 * STEP 5 Calculate new centroid of a cluster recursively until it does not change
 	 */
 	public void createClusters() {
 
 		// Keeping track if the cluster centroids have changed
 		changed = false;
 
-		// 'null' value point
+		// 'null' value point that is outside the bounds of the area
 		Point2D.Double nullPoint = new Point2D.Double(originX - 1, originY - 1);
 
 		// Empty nearestCentroids so that they can be set again
 		nearestCentroids.clear();
 
-		// Parallel arrays so that nearestCentroids(i) is the nearest centroid to
-		// points(i)
+		// Parallel arrays so that nearestCentroids(i) is the nearest centroid to points(i)
 		for (int i = 0; i < points.size(); i++) {
 			nearestCentroids.add(calculateNearestCentroid(points.get(i)));
 		}
@@ -191,8 +180,7 @@ public class KMeansClustering {
 		// Array of K clusters, one for each centroid, of max size = number of points
 		Point2D.Double[][] arr = new Point2D.Double[points.size()][K];
 
-		// For the nearest centroid of each point, if it is equal to a centroid, add the
-		// point to that centroid's cluster
+		// For the nearest centroid of each point, if it is equal to a centroid, add the point to that centroid's cluster
 		for (int i = 0; i < arr.length; i++) {
 			for (int j = 0; j < K; j++) {
 				if (nearestCentroids.get(i) == centroids.get(j)) {
@@ -221,6 +209,7 @@ public class KMeansClustering {
 					&& !(centroids.get(l).getY() == sumY / count)) {
 				Point2D.Double newCentroid = new Point2D.Double((sumX / count), (sumY / count));
 				centroids.set(l, newCentroid);
+				
 				// Cluster centroids have changed
 				changed = true;
 			}
@@ -233,6 +222,7 @@ public class KMeansClustering {
 	}
 
 	/**
+	 * Using the parallel arrays, find the contents of a cluster based on a centroid
 	 * @param centroid
 	 * @return the points in a cluster
 	 */
@@ -259,8 +249,7 @@ public class KMeansClustering {
 	public void printAllClusters() {
 
 		for (int i = 0; i < centroids.size(); i++) {
-			System.out.println(
-					"CLUSTER FOR CENTROID " + centroids.get(i) + ": " + getClusterValuesForCentroid(centroids.get(i)));
+			System.out.println("CLUSTER FOR CENTROID " + centroids.get(i) + ": " + getClusterValuesForCentroid(centroids.get(i)));
 		}
 
 	}

@@ -10,20 +10,16 @@ import java.util.Map;
 
 /**
  * @author Emily
-
+ *
+ *         Density-Based Spatial Clustering Algorithm with Noise
+ *        
  *         DBSCAN requires two parameters:   
  *         eps - the min distance between two points, so that if the distance between
  *         two points is lower than or equal to this value, these points are neighbours
  *         minPoints - the minimum number of points to form a dense region
  *         
- *         STEP 1: Find the eps neighbours of every point and identify the CORE POINTS with more than minPoints neighbours
- *         STEP 2: Find the connected components of CORE POINTS on the neighbour graph, ignoring all non-core points
- *         STEP 3: Assign each non-core point to a nearby cluster if the cluster is an eps neighbour, otherwise assign it to OUTLIER POINTS
- *         
  *         A point is a CORE POINT if it has more than minPoints within eps
- *         
  *         A BORDER POINT has fewer than minPoints within eps, but is in the neighbourhood of a CORE POINT
- *         
  *         An OUTLIER POINT is any point that is not either of the above points
  *         
  *         A point p is DENSITY-REACHABLE from a point q if there is a chain of points p1, p2, ..., pn where p1 = q and pn = p such that pi+1
@@ -40,8 +36,6 @@ import java.util.Map;
  *         DBSCAN is not a centroid-based clustering algorithm so clusters will have no centroids
  *         Modify DBSCAN so that a cluster's centroid can be calculated for POI purposes
  *         
- *         Density-Based Spatial Clustering Algorithm with Noise
- * 
  */
 
 public class DBSCAN {
@@ -51,17 +45,6 @@ public class DBSCAN {
 	
 	// Min points to form dense region
 	private int minPoints = 0;
-	
-	//private double dist = 0;
-	
-	// Max X and Y bounds of graph
-	// Max lat and long for GPS
-	private double maxY = 0;
-	private double maxX = 0;
-
-	// Origins
-	private double originX = 0;
-	private double originY = 0;
 	
 	// List of points
 	private ArrayList<Point2D.Double> points = new ArrayList<Point2D.Double>();
@@ -89,15 +72,10 @@ public class DBSCAN {
 	 * @param originY
 	 * @param points
 	 */
-	public DBSCAN(double eps, int minPoints, double maxY, double maxX, double originX, double originY, ArrayList<Point2D.Double> points) {
+	public DBSCAN(double eps, int minPoints, ArrayList<Point2D.Double> points) {
 		super();
-		//this.dist = dist;
 		this.eps = eps;
 		this.minPoints = minPoints;
-		this.maxY = maxY;
-		this.maxX = maxX;
-		this.originX = originX;
-		this.originY = originY;
 		this.points = points;
 	}
 	
@@ -130,11 +108,9 @@ public class DBSCAN {
 	 * 
 	 * @param a
 	 * @param b
-	 * @return
+	 * @return a, the merged list
 	 */
 	private ArrayList<Point2D.Double> mergeLists(ArrayList<Point2D.Double> a, ArrayList<Point2D.Double> b) {
-		
-		ArrayList<Point2D.Double> merged = new ArrayList<Point2D.Double>();
 		
 		for (Point2D.Double point : b) {
 			if (!a.contains(point)) {
@@ -143,8 +119,6 @@ public class DBSCAN {
 		}
 		return a;
 	}
-	
-	
 	
 	/**
 	 * Perform DBSCAN
@@ -226,9 +200,7 @@ public class DBSCAN {
 				// Add the current point to the cluster
 				cluster.add(currentPoint);
 			}
-			
 			i++;
-			
 		}
 		
 		// TESTING - Making sure the clusters have been created
@@ -237,7 +209,6 @@ public class DBSCAN {
 		return cluster;
 		
 	}
-	
 	
 	/**
 	 *  To generate centroids for each cluster so that these can be POIs
@@ -261,7 +232,6 @@ public class DBSCAN {
 				sumY = sumY + clusters.get(i).get(j).getY();
 				
 				count++;
-				
 			}
 			
 			sumX = sumX / count;
@@ -272,22 +242,13 @@ public class DBSCAN {
 			sumX = 0.0;
 			sumY = 0.0;
 			count = 0;
-		}
-		
+		}	
 		
 		// Print the cluster contents for each centroid
 		for (int k = 0; k < clusters.size(); k++) {
 			
 		System.out.println("DBSCAN CLUSTER FOR CENTROID " + centroids.get(k) + ": " + clusters.get(k));
 		
-		}
-		
-	}
-	
-	
-	
-	
-	
-	
-	
+		}	
+	}	
 }
