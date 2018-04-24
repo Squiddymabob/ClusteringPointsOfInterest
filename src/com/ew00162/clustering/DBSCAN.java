@@ -213,7 +213,7 @@ public class DBSCAN {
 	/**
 	 *  To generate centroids for each cluster so that these can be POIs
 	 */
-	public void generatePOIS() {
+	public ArrayList<Point2D.Double> generatePOIS() {
 		
 		ArrayList<ArrayList<Point2D.Double>> clusters = output;
 		
@@ -249,6 +249,8 @@ public class DBSCAN {
 			
 		System.out.println("DBSCAN CLUSTER FOR CENTROID " + centroids.get(k) + ": " + clusters.get(k));
 		
-		}	
+		}
+		return centroids;	
 	}	
+	
 }

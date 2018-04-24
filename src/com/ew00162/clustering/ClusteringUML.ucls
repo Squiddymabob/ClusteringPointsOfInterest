@@ -12,7 +12,7 @@
   </class>  
   <enumeration id="2" language="java" name="com.ew00162.clustering.DBSCAN.Status" project="ClusteringPOI" 
     file="/ClusteringPOI/src/com/ew00162/clustering/DBSCAN.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="563" y="560"/>    
+    <position height="-1" width="-1" x="661" y="407"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -21,7 +21,7 @@
   </enumeration>  
   <class id="3" language="java" name="com.ew00162.clustering.DBSCAN" project="ClusteringPOI" 
     file="/ClusteringPOI/src/com/ew00162/clustering/DBSCAN.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="670" y="204"/>    
+    <position height="-1" width="-1" x="661" y="165"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -30,7 +30,7 @@
   </class>  
   <class id="4" language="java" name="com.ew00162.clustering.OwnAlgorithm" project="ClusteringPOI" 
     file="/ClusteringPOI/src/com/ew00162/clustering/OwnAlgorithm.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1088" y="259"/>    
+    <position height="-1" width="-1" x="1074" y="256"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -39,7 +39,7 @@
   </class>  
   <class id="5" language="java" name="com.ew00162.clustering.RunClustering" project="ClusteringPOI" 
     file="/ClusteringPOI/src/com/ew00162/clustering/RunClustering.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1416" y="104"/>    
+    <position height="-1" width="-1" x="1567" y="131"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -48,7 +48,7 @@
   </class>  
   <class id="6" language="java" name="com.ew00162.clustering.POI" project="ClusteringPOI" 
     file="/ClusteringPOI/src/com/ew00162/clustering/POI.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="1492" y="601"/>    
+    <position height="-1" width="-1" x="1383" y="211"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -62,10 +62,10 @@
   <association id="8">    
     <end type="SOURCE" refId="3" navigable="false">      
       <attribute id="9" name="visitedPoints">        
-        <position height="0" width="0" x="0" y="0"/>      
+        <position height="0" width="0" x="98" y="-153"/>      
       </attribute>      
       <multiplicity id="10" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="0" y="0"/>      
+        <position height="0" width="0" x="98" y="-153"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    

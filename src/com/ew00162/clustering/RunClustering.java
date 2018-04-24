@@ -4,6 +4,7 @@
 package com.ew00162.clustering;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,24 +18,6 @@ import com.google.gson.*;
  *
  */
 
-/**
- * 
- *  "id": "1",
-	"longitude": "-0.592333",
-	"latitude": "51.255127",
-	"description": "Test Marker",
-	"altitude": "100.0",
-	"name": "Test Marker",
-	"images": "fidjsfidsfhjdsif
- * 
- * 
- * 
- *
- */
-
-
-
-
 public class RunClustering {
 	
 	// Images need to have associated GPS locations, these are the memories to cluster
@@ -43,15 +26,16 @@ public class RunClustering {
 	// Input array of points for clustering
 	static ArrayList<Point2D.Double> locations = new ArrayList<Point2D.Double>();
 	
-	// METHODS
-	
 	/**
 	 * Loading the dataset of memories so that they can be clustered by the clustering alogorithms
+	 * 
+	 * image1 is the image for location1 and so on
+	 * 
+	 * Both image names and locations MUST BE UNIQUE
 	 */
 	public static void loadMemories() {
 		
-		// Image details
-		// ID, image file, description, name
+		// Image filenames
 		String image1 = "image1";
 		String image2 = "image2";
 		String image3 = "image3";
@@ -64,7 +48,7 @@ public class RunClustering {
 		String image10 = "image10";
 		String image11 = "image11";
 		
-		// GPS points
+		// GPS locations of the images
 		Point2D.Double location1 = new Point2D.Double(8.2,11.1);
 		Point2D.Double location2 = new Point2D.Double(8.3,11.2);
 		Point2D.Double location3 = new Point2D.Double(6.0,1.3);
@@ -92,11 +76,8 @@ public class RunClustering {
 		
 		// Creating location points array for clustering algorithms
 		for (String key: memories.keySet()) {
-			
-		    locations.add(memories.get(key));
-		    
-		}
-		
+		    locations.add(memories.get(key));   
+		}	
 	}
 	
 	/**
@@ -118,9 +99,9 @@ public class RunClustering {
 	    return null;
 	}
 	
-	// MAIN METHOD
-	
 	/**
+	 * Main method
+	 * 
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -212,7 +193,6 @@ public class RunClustering {
 			if (!images.isEmpty()) {
 				kMeansPOIs.add(poi);
 			}
-			
 		}
 		
 		System.out.println(kMeansPOIs);
@@ -224,12 +204,103 @@ public class RunClustering {
 		kMeansJSON = "var myJsonData = " + kMeansJSON + ";";
 		
 		// TESTING - print the JSON string
-		System.out.println(kMeansJSON);
+		System.out.println("K Means JSON: " + kMeansJSON);
 		
 		System.out.println("---");
 		
 		/**-------------------------------------------------------END OF K MEANS-------------------------------------------------------*/
 		
+		/**-------------------------------------------------------START OF DBSCAN-------------------------------------------------------*/
+		System.out.println("---DBSCAN---");
+		
+		/*-------------------------------------------------------PERFORMING DBSCAN CLUSTERING-------------------------------------------------------*/
+		
+		// Create new DBSCAN
+		DBSCAN testDBSCAN = new DBSCAN(2, 1, locations);
+		
+		ArrayList<ArrayList<Double>> DBSCANclusters = testDBSCAN.performDBSCAN();
+		
+		// testDBSCAN.generatePOIS();
+		
+		/*-------------------------------------------------------WRITING THE JSON FILE-------------------------------------------------------*/
+		
+		// Get the final centroids produced by DBSCAN
+		ArrayList<Point2D.Double> DBSCANCentroids = testDBSCAN.generatePOIS();
+		
+		// Produced POIs
+		ArrayList<POI> DBSCANPOIs = new ArrayList<POI>();
+		
+		// For the ID field
+		int countDBSCAN = 1;
+		
+		// For each final centroid
+		for (Point2D.Double centroid : DBSCANCentroids) {
+			
+			// TESTING
+			System.out.println("CENTROID: " + centroid);
+			
+			// Generate a new POI object with the lat long of that centroid
+			POI poi = new POI();
+			
+			poi.setLat(String.valueOf(centroid.getX()));
+			poi.setLng(String.valueOf(centroid.getY()));
+			
+			// Set the images of the POI to be the images associated with the points in that centroid's cluster
+			ArrayList<String> images = new ArrayList<String>();
+			
+			ArrayList<Point2D.Double> clusterContents = DBSCANclusters.get(countDBSCAN - 1);
+			
+			for (Point2D.Double point : clusterContents) {
+				
+				images.add(getKeyByValue(memories, point));
+				
+			}	
+			
+			// TESTING
+			System.out.println("IMAGES: " + images);
+			
+			// Make images into a string
+			StringBuilder builder = new StringBuilder();
+			
+			for (String str : images) {
+			    if (builder.length() > 0) {
+			        builder.append(", ");
+			    }
+			    builder.append(str);
+			}
+			
+			String imagesString = builder.toString();
+			
+			poi.setImages(imagesString);
+			
+			// Set other values
+			poi.setAltitude("100.0");
+			poi.setDescription("description");
+			poi.setId(String.valueOf(countDBSCAN));
+			poi.setName("name");
+			
+			countDBSCAN++;
+			
+			// Add to produced POIs if images contained in cluster
+			if (!images.isEmpty()) {
+				DBSCANPOIs.add(poi);
+			}
+		}
+		
+		System.out.println(DBSCANPOIs);
+		
+		// Writing the JSON file
+		String DBSCANJSON = new Gson().toJson(DBSCANPOIs);
+		
+		// Formatting for js
+		DBSCANJSON = "var myJsonData = " + DBSCANJSON + ";";
+		
+		// TESTING - print the JSON string
+		System.out.println("DBSCAN JSON: " + DBSCANJSON);
+		
+		System.out.println("---");
+		
+		/**-------------------------------------------------------END OF DBSCAN-------------------------------------------------------*/
 		
 		
 		
