@@ -35,49 +35,56 @@ public class RunClustering {
 	 */
 	public static void loadMemories() {
 		
-		// Image filenames
-		String image1 = "image1";
-		String image2 = "image2";
-		String image3 = "image3";
-		String image4 = "image4";
-		String image5 = "image5";
-		String image6 = "image6";
-		String image7 = "image7";
-		String image8 = "image8";
-		String image9 = "image9";
-		String image10 = "image10";
-		String image11 = "image11";
+//		// Image filenames
+//		String image1 = "image1";
+//		String image2 = "image2";
+//		String image3 = "image3";
+//		String image4 = "image4";
+//		String image5 = "image5";
+//		String image6 = "image6";
+//		String image7 = "image7";
+//		String image8 = "image8";
+//		String image9 = "image9";
+//		String image10 = "image10";
+//		String image11 = "image11";
+//		
+//		// GPS locations of the images
+//		Point2D.Double location1 = new Point2D.Double(8.2,11.1);
+//		Point2D.Double location2 = new Point2D.Double(8.3,11.2);
+//		Point2D.Double location3 = new Point2D.Double(6.0,1.3);
+//		Point2D.Double location4 = new Point2D.Double(12.4,15.3);
+//		Point2D.Double location5 = new Point2D.Double(8.2,11.3);
+//		Point2D.Double location6 = new Point2D.Double(8.9,7.2);
+//		Point2D.Double location7 = new Point2D.Double(12.3,15.9);
+//		Point2D.Double location8 = new Point2D.Double(3.5,5.3);
+//		Point2D.Double location9 = new Point2D.Double(1.6,0.2);
+//		Point2D.Double location10 = new Point2D.Double(4.4,4.7);
+//		Point2D.Double location11 = new Point2D.Double(6.0,4.0);
+//		
+//		// Adding the dataset of memories
+//		memories.put(image1, location1);
+//		memories.put(image2, location2);
+//		memories.put(image3, location3);
+//		memories.put(image4, location4);
+//		memories.put(image5, location5);
+//		memories.put(image6, location6);
+//		memories.put(image7, location7);
+//		memories.put(image8, location8);
+//		memories.put(image9, location9);
+//		memories.put(image10, location10);
+//		memories.put(image11, location11);
+//		
 		
-		// GPS locations of the images
-		Point2D.Double location1 = new Point2D.Double(8.2,11.1);
-		Point2D.Double location2 = new Point2D.Double(8.3,11.2);
-		Point2D.Double location3 = new Point2D.Double(6.0,1.3);
-		Point2D.Double location4 = new Point2D.Double(12.4,15.3);
-		Point2D.Double location5 = new Point2D.Double(8.2,11.3);
-		Point2D.Double location6 = new Point2D.Double(8.9,7.2);
-		Point2D.Double location7 = new Point2D.Double(12.3,15.9);
-		Point2D.Double location8 = new Point2D.Double(3.5,5.3);
-		Point2D.Double location9 = new Point2D.Double(1.6,0.2);
-		Point2D.Double location10 = new Point2D.Double(4.4,4.7);
-		Point2D.Double location11 = new Point2D.Double(6.0,4.0);
-		
-		// Adding the dataset of memories
-		memories.put(image1, location1);
-		memories.put(image2, location2);
-		memories.put(image3, location3);
-		memories.put(image4, location4);
-		memories.put(image5, location5);
-		memories.put(image6, location6);
-		memories.put(image7, location7);
-		memories.put(image8, location8);
-		memories.put(image9, location9);
-		memories.put(image10, location10);
-		memories.put(image11, location11);
+		ReadCSV readCSV = new ReadCSV();
+		memories = readCSV.readCSV();
 		
 		// Creating location points array for clustering algorithms
 		for (String key: memories.keySet()) {
 		    locations.add(memories.get(key));   
-		}	
+		}
+		
+		
+		
 	}
 	
 	/**
@@ -216,7 +223,8 @@ public class RunClustering {
 		/*-------------------------------------------------------PERFORMING DBSCAN CLUSTERING-------------------------------------------------------*/
 		
 		// Create new DBSCAN
-		DBSCAN testDBSCAN = new DBSCAN(2, 1, locations);
+		DBSCAN testDBSCAN = new DBSCAN(0.0005, 2, locations);
+		//DBSCAN testDBSCAN = new DBSCAN(2, 1, locations);
 		
 		ArrayList<ArrayList<Double>> DBSCANclusters = testDBSCAN.performDBSCAN();
 		
