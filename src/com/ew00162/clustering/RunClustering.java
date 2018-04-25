@@ -122,7 +122,8 @@ public class RunClustering {
 		/*-------------------------------------------------------PERFORMING K MEANS CLUSTERING-------------------------------------------------------*/
 		
 		// Create new K Means
-		KMeansClustering testmeans = new KMeansClustering(3, 16, 16, 0, 0, locations);
+		//KMeansClustering testmeans = new KMeansClustering(3, 51.244957, -0.583740, 51.241006, -0.597834, locations);
+		KMeansClustering testmeans = new KMeansClustering(7, 51.244957, -0.583740, 51.241006, -0.597834, locations);
 		
 		// Initialise centroids
 		testmeans.createCentroids();
@@ -179,12 +180,14 @@ public class RunClustering {
 			
 			for (String str : images) {
 			    if (builder.length() > 0) {
-			        builder.append(", ");
+			        builder.append(".jpg, ");
 			    }
 			    builder.append(str);
 			}
 			
 			String imagesString = builder.toString();
+			
+			imagesString = imagesString + ".jpg";
 			
 			poi.setImages(imagesString);
 			
@@ -272,12 +275,14 @@ public class RunClustering {
 			
 			for (String str : images) {
 			    if (builder.length() > 0) {
-			        builder.append(", ");
+			        builder.append(".jpg, ");
 			    }
 			    builder.append(str);
 			}
 			
 			String imagesString = builder.toString();
+			
+			imagesString = imagesString + ".jpg";
 			
 			poi.setImages(imagesString);
 			
@@ -426,29 +431,32 @@ public class RunClustering {
 //		 * Own Algorithm
 //		 */
 //		
-//		System.out.println("---OWN ALGORITHM---");
-//		
-//		// Create new Own Algorithm
-//		// Box sizes should be set based on Geofence radius for application
-//		OwnAlgorithm testOwnAlgorithm = new OwnAlgorithm(16, 16, 0, 0, testset, 2, 2, 8, 8);
-//		
-//		testOwnAlgorithm.generateCentroids();
-//		
-//		System.out.println(testOwnAlgorithm.findNearestCentroid(newPoint11));
-//		
-//		testOwnAlgorithm.createClusters();
-//		
-//		System.out.println("CREATE CLUSTERS: " + testOwnAlgorithm.getClusters());
-//		
-//		System.out.println("BEFORE: " + testOwnAlgorithm.getCentroids());
-//		
-//		testOwnAlgorithm.updateCentroids();
-//		
-//		System.out.println("AFTER: " + testOwnAlgorithm.getCentroids());
-//		
-//		testOwnAlgorithm.printAllClusters();
-//		
-//		System.out.println("---");
+		System.out.println("---OWN ALGORITHM---");
+		
+		// Create new Own Algorithm
+		// Box sizes should be set based on Geofence radius for application
+		
+		//OwnAlgorithm(double maxY, double maxX, double originX, double originY, ArrayList<Point2D.Double> points, double boxWidth, double boxHeight, int boxRows, int boxColumns) 
+		//OwnAlgorithm testOwnAlgorithm = new OwnAlgorithm(16, 16, 0, 0, locations, 2, 2, 8, 8);
+		OwnAlgorithm testOwnAlgorithm = new OwnAlgorithm(51.244957, -0.583740, 51.241006, -0.597834, locations, 0.0001, 0.0001, 8, 8);
+		
+		testOwnAlgorithm.generateCentroids();
+		
+		//System.out.println(testOwnAlgorithm.findNearestCentroid(newPoint11));
+		
+		testOwnAlgorithm.createClusters();
+		
+		System.out.println("CREATE CLUSTERS: " + testOwnAlgorithm.getClusters());
+		
+		System.out.println("BEFORE: " + testOwnAlgorithm.getCentroids());
+		
+		testOwnAlgorithm.updateCentroids();
+		
+		System.out.println("AFTER: " + testOwnAlgorithm.getCentroids());
+		
+		testOwnAlgorithm.printAllClusters();
+		
+		System.out.println("---");
 		
 	}
 

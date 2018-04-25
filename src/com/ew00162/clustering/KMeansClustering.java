@@ -77,17 +77,17 @@ public class KMeansClustering {
 	 * Constructor
 	 * 
 	 * @param k
-	 * @param maxY
 	 * @param maxX
+	 * @param maxY
 	 * @param originX
 	 * @param originY
 	 * @param points
 	 */
-	public KMeansClustering(int k, double maxY, double maxX, double originX, double originY, ArrayList<Point2D.Double> points) {
+	public KMeansClustering(int k, double maxX, double maxY, double originX, double originY, ArrayList<Point2D.Double> points) {
 		super();
 		this.K = k;
-		this.maxY = maxY;
 		this.maxX = maxX;
+		this.maxY = maxY;
 		this.originX = originX;
 		this.originY = originY;
 		this.points = points;
@@ -104,8 +104,11 @@ public class KMeansClustering {
 			// Create random X and Y values for the new point
 			// Values will be inside max range of graph
 			// Random r = new Random();
-			double randomX = ThreadLocalRandom.current().nextDouble(originX, maxX);
-			double randomY = ThreadLocalRandom.current().nextDouble(originY, maxY);
+			//double randomX = ThreadLocalRandom.current().nextDouble(originX, maxX);
+			//double randomY = ThreadLocalRandom.current().nextDouble(originY, maxY);
+			
+			double randomX = (Math.random() * (maxX - originX)) + originX;
+			double randomY = (Math.random() * (maxY - originY)) + originY;
 
 			// Create new point
 			Point2D.Double newPoint = new Point2D.Double(randomX, randomY);
