@@ -5,7 +5,6 @@ package com.ew00162.clustering;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author Emily

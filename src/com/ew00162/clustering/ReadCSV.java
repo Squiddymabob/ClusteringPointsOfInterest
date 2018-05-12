@@ -25,8 +25,8 @@ public class ReadCSV {
 	private String cvsSplitBy = ",";
 
 	/**
-	 * 
-	 * @return
+	 * Read the memories (images with geo-location data) to cluster from a CSV file
+	 * @return HashMap of memories
 	 */
     public Map<String, Point2D.Double> readCSV() {
     	

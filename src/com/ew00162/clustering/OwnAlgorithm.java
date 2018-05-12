@@ -71,15 +71,15 @@ public class OwnAlgorithm {
 	 * @param points
 	 * @param squareSize
 	 */
-	public OwnAlgorithm(double maxY, double maxX, double originX, double originY, ArrayList<Point2D.Double> points, double boxWidth, double boxHeight, int boxRows, int boxColumns) {
+	public OwnAlgorithm(double maxX, double maxY, double originX, double originY, ArrayList<Point2D.Double> points, int boxRows, int boxColumns) {
 		super();
 		this.maxY = maxY;
 		this.maxX = maxX;
 		this.originX = originX;
 		this.originY = originY;
 		this.points = points;
-		this.boxWidth = boxWidth;
-		this.boxHeight = boxHeight;
+		this.boxWidth = Math.abs(maxX - originX) / boxColumns;
+		this.boxHeight = Math.abs(maxY - originY) / boxRows;
 		this.boxRows = boxRows;
 		this.boxColumns = boxColumns;
 	}
@@ -95,7 +95,9 @@ public class OwnAlgorithm {
 		double newX = originX + (boxWidth/2);
 		double newY = originY + (boxHeight/2);
 		
-		// TESTING
+		System.out.println(boxWidth);
+		System.out.println(boxHeight);
+		
 		int count = 0;
 		
 		for (int j = 0; j < boxRows; j++) {
@@ -136,13 +138,23 @@ public class OwnAlgorithm {
 		
 		double pointX = point.getX();
 		double pointY = point.getY();
+		int column = 0;
+		int row = 0;
 		
-		int column = (int) Math.ceil((pointX - originX) / boxWidth);
-		int row = (int) Math.ceil((pointY - originY) / boxHeight);
+		if (pointX < (originX + boxWidth)) {
+			column = 1;
+		}
+		else {
+			column = (int) Math.ceil((pointX - originX) / boxWidth);
+		}
+		row = (int) Math.ceil((pointY - originY) / boxHeight);
 		
 		//System.out.println(column);
 		//System.out.println(row);
 		
+		//System.out.println(centroids.size());
+		
+		//System.out.println(boxColumns * (row - 1) + (column - 1));
 		// To get correct index in array of centroids if not in the first row, add all boxes from rows below and additional boxes from columns left of point
 		nearestCentroid = centroids.get(boxColumns * (row - 1) + (column - 1));
 

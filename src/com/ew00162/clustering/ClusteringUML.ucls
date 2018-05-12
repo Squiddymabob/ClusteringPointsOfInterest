@@ -12,7 +12,7 @@
   </class>  
   <enumeration id="2" language="java" name="com.ew00162.clustering.DBSCAN.Status" project="ClusteringPOI" 
     file="/ClusteringPOI/src/com/ew00162/clustering/DBSCAN.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="602" y="384"/>    
+    <position height="-1" width="-1" x="601" y="371"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="true" protected="true" private="true" static="true"/>      
@@ -64,22 +64,31 @@
       <operations public="true" package="true" protected="true" private="true" static="true"/>    
     </display>  
   </class>  
-  <nesting id="8">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="2"/>  
-  </nesting>  
+  <class id="8" language="java" name="com.ew00162.clustering.SilhouetteCoefficient" project="ClusteringPOI" 
+    file="/ClusteringPOI/src/com/ew00162/clustering/SilhouetteCoefficient.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="288" y="569"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
   <association id="9">    
     <end type="SOURCE" refId="3" navigable="false">      
       <attribute id="10" name="visitedPoints">        
-        <position height="0" width="0" x="39" y="-176"/>      
+        <position height="0" width="0" x="38" y="-189"/>      
       </attribute>      
       <multiplicity id="11" minimum="0" maximum="2147483647">        
-        <position height="0" width="0" x="39" y="-176"/>      
+        <position height="0" width="0" x="38" y="-189"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="2" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
+  <nesting id="12">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="2"/>  
+  </nesting>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="true" protected="true" private="true" static="true"/>    

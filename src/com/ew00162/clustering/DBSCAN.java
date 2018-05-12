@@ -58,7 +58,7 @@ public class DBSCAN {
 	Map<Point2D.Double, Status> visitedPoints = new HashMap<Point2D.Double, Status>();
 	
 	// For finding centroids for POI
-	ArrayList<ArrayList<Point2D.Double>> output = new ArrayList<ArrayList<Point2D.Double>>();
+	private ArrayList<ArrayList<Point2D.Double>> output = new ArrayList<ArrayList<Point2D.Double>>();
 	
 	/**
 	 * Constructor

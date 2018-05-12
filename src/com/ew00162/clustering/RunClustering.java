@@ -138,6 +138,51 @@ public class RunClustering {
 		
 		testmeans.printAllClusters();
 		
+		/*-------------------------------------------------------CALCULATING SILHOUETTE COEFFICIENT-------------------------------------------------------*/
+		
+		double silhouetteCoefficientKMeans = 0.0;
+		
+		ArrayList<ArrayList<Double>> KMeansClusters = new ArrayList<ArrayList<Double>>();
+		
+		ArrayList<Double> KMeansCentroids = testmeans.getCentroids();
+		
+		// For keeping track of which centroids have already been added to the overall silhouette coefficient
+		ArrayList<Double> VisitedCentroids = new ArrayList<Double>();
+
+		for (Point2D.Double c : testmeans.getCentroids()) {
+			
+			KMeansClusters.add(testmeans.getClusterValuesForCentroid(c));
+			
+		}
+		
+		for (Point2D.Double c : testmeans.getCentroids()) {
+			
+			// If the centroid has not already been visited, add to visited list and calculate silhouette coefficient for each of its points
+			if(!(VisitedCentroids.contains(c))) {
+				VisitedCentroids.add(c);
+			
+				ArrayList<Point2D.Double> clusterPoints = testmeans.getClusterValuesForCentroid(c);
+
+				for (Point2D.Double p : clusterPoints) {
+
+					ArrayList<Double> cluster = testmeans.getClusterValuesForCentroid(c);
+
+					// SilhouetteCoefficient(Double point, ArrayList<Double> cluster, ArrayList<ArrayList<Double>> clusters, ArrayList<Double> centroids)
+					SilhouetteCoefficient sc = new SilhouetteCoefficient(p, cluster, KMeansClusters, KMeansCentroids);
+					
+					silhouetteCoefficientKMeans = silhouetteCoefficientKMeans + sc.calculateSilhouetteCoefficient();
+				
+				}
+			}
+			
+		}
+		
+		silhouetteCoefficientKMeans = silhouetteCoefficientKMeans / locations.size();
+		
+		System.out.println("K-MEANS OVERALL AVERAGE SILHOUETTE COEFFICIENT: " + silhouetteCoefficientKMeans);
+		
+
+		
 		/*-------------------------------------------------------WRITING THE JSON FILE-------------------------------------------------------*/
 		
 		// Get the final centroids produced by K Means
@@ -436,9 +481,9 @@ public class RunClustering {
 		// Create new Own Algorithm
 		// Box sizes should be set based on Geofence radius for application
 		
-		//OwnAlgorithm(double maxY, double maxX, double originX, double originY, ArrayList<Point2D.Double> points, double boxWidth, double boxHeight, int boxRows, int boxColumns) 
+		//OwnAlgorithm(double maxX, double maxY, double originX, double originY, ArrayList<Point2D.Double> points, double boxWidth, double boxHeight, int boxRows, int boxColumns) 
 		//OwnAlgorithm testOwnAlgorithm = new OwnAlgorithm(16, 16, 0, 0, locations, 2, 2, 8, 8);
-		OwnAlgorithm testOwnAlgorithm = new OwnAlgorithm(51.244957, -0.583740, 51.241006, -0.597834, locations, 0.0001, 0.0001, 8, 8);
+		OwnAlgorithm testOwnAlgorithm = new OwnAlgorithm(51.244957, -0.583740, 51.240799, -0.593499, locations, 8, 8);
 		
 		testOwnAlgorithm.generateCentroids();
 		
