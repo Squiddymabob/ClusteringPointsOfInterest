@@ -123,7 +123,7 @@ public class RunClustering {
 		
 		// Create new K Means
 		//KMeansClustering testmeans = new KMeansClustering(3, 51.244957, -0.583740, 51.241006, -0.597834, locations);
-		KMeansClustering testmeans = new KMeansClustering(7, 51.244957, -0.583740, 51.241006, -0.597834, locations);
+		KMeansClustering testmeans = new KMeansClustering(12, 51.242, -0.586, 51.241, -0.592, locations);
 		
 		// Initialise centroids
 		testmeans.createCentroids();
@@ -144,6 +144,15 @@ public class RunClustering {
 		
 		ArrayList<ArrayList<Double>> KMeansClusters = new ArrayList<ArrayList<Double>>();
 		
+		// ArrayList for DB calculations that doesn't contain duplicate clusters
+		ArrayList<ArrayList<Double>> KMeansClustersDB = new ArrayList<ArrayList<Double>>();
+		
+		// ArrayList for DB calculations that doesn't contain duplicate points
+		ArrayList<Point2D.Double> KMeansPointsDB = new ArrayList<Double>();
+		
+		// ArrayList for DB calculations that doesn't contain duplicate centroids
+		ArrayList<Point2D.Double> KMeansCentroidsDB = new ArrayList<Double>();
+		
 		ArrayList<Double> KMeansCentroids = testmeans.getCentroids();
 		
 		// For keeping track of which centroids have already been added to the overall silhouette coefficient
@@ -160,7 +169,10 @@ public class RunClustering {
 			// If the centroid has not already been visited, add to visited list and calculate silhouette coefficient for each of its points
 			if(!(VisitedCentroids.contains(c))) {
 				VisitedCentroids.add(c);
-			
+				
+				// If centroid hasn't been visited, is not duplicate, so add to DB ArrayList
+				KMeansCentroidsDB.add(c);
+				
 				ArrayList<Point2D.Double> clusterPoints = testmeans.getClusterValuesForCentroid(c);
 
 				for (Point2D.Double p : clusterPoints) {
@@ -171,16 +183,27 @@ public class RunClustering {
 					SilhouetteCoefficient sc = new SilhouetteCoefficient(p, cluster, KMeansClusters, KMeansCentroids);
 					
 					silhouetteCoefficientKMeans = silhouetteCoefficientKMeans + sc.calculateSilhouetteCoefficient();
+								
+					// Add the points for this cluster to the ArrayList for the DB calculations
+					KMeansPointsDB.add(p);
 				
 				}
+				// Add the cluster to the ArrayList of clusters for the DB calculations
+				KMeansClustersDB.add(KMeansPointsDB);
 			}
 			
 		}
 		
 		silhouetteCoefficientKMeans = silhouetteCoefficientKMeans / locations.size();
 		
+		
 		System.out.println("K-MEANS OVERALL AVERAGE SILHOUETTE COEFFICIENT: " + silhouetteCoefficientKMeans);
 		
+		/*-------------------------------------------------------CALCULATING DAVIES-BOULDIN INDEX-------------------------------------------------------*/
+		
+		DaviesBouldinIndex KMeansDB = new DaviesBouldinIndex(KMeansCentroidsDB, KMeansClustersDB);
+		
+		System.out.println("K-MEANS DB: " + KMeansDB.calculateDaviesBouldinIndex());
 
 		
 		/*-------------------------------------------------------WRITING THE JSON FILE-------------------------------------------------------*/
@@ -271,17 +294,69 @@ public class RunClustering {
 		/*-------------------------------------------------------PERFORMING DBSCAN CLUSTERING-------------------------------------------------------*/
 		
 		// Create new DBSCAN
-		DBSCAN testDBSCAN = new DBSCAN(0.0005, 2, locations);
+		DBSCAN testDBSCAN = new DBSCAN(0.0004, 4, locations);
 		//DBSCAN testDBSCAN = new DBSCAN(2, 1, locations);
 		
-		ArrayList<ArrayList<Double>> DBSCANclusters = testDBSCAN.performDBSCAN();
+		ArrayList<ArrayList<Point2D.Double>> DBSCANclusters = testDBSCAN.performDBSCAN();
 		
-		// testDBSCAN.generatePOIS();
+		// Get the final centroids produced by DBSCAN so that this algorithm can be used to generate POIs
+		ArrayList<Point2D.Double> DBSCANCentroids = testDBSCAN.generatePOIS();
+		
+		/*-------------------------------------------------------CALCULATING SILHOUETTE COEFFICIENT-------------------------------------------------------*/
+		
+		double silhouetteCoefficientDBSCAN = 0.0;
+		
+		int iterator = 0;
+		
+		// Keeps track of how many points from the dataset have been assigned to clusters as DBSCAN disregards noise
+		int pointCount = 0;
+		
+		for (Point2D.Double c : DBSCANCentroids) {
+			
+			for (Point2D.Double p : DBSCANclusters.get(iterator)) {
+				
+				ArrayList<Point2D.Double> DBSCANcluster = DBSCANclusters.get(iterator);
+				
+				// SilhouetteCoefficient(Double point, ArrayList<Double> cluster, ArrayList<ArrayList<Double>> clusters, ArrayList<Double> centroids)
+				SilhouetteCoefficient scDBSCAN = new SilhouetteCoefficient(p, DBSCANcluster, DBSCANclusters, DBSCANCentroids);
+				
+				silhouetteCoefficientDBSCAN = silhouetteCoefficientDBSCAN + scDBSCAN.calculateSilhouetteCoefficient();
+				
+				pointCount++;
+				
+			}
+			
+			iterator++;
+			
+		}
+		
+		
+		silhouetteCoefficientDBSCAN = silhouetteCoefficientDBSCAN / pointCount;
+		
+		System.out.println("DBSCAN OVERALL AVERAGE SILHOUETTE COEFFICIENT: " + silhouetteCoefficientDBSCAN);
+		
+		System.out.println("COUNT: " + pointCount);
+		
+		/*-------------------------------------------------------CALCULATING DAVIES-BOULDIN INDEX-------------------------------------------------------*/
+		
+		DaviesBouldinIndex DBSCANDB = new DaviesBouldinIndex(DBSCANCentroids, DBSCANclusters);
+		
+		System.out.println("DBSCAN DB: " + DBSCANDB.calculateDaviesBouldinIndex());
+		
+		/*-------------------------------------------------------CALCULATING COVERAGE-------------------------------------------------------*/
+		
+		double coverage = 0.0;
+		double size = locations.size();
+		
+		// Calculate coverage as a percentage
+		coverage = (pointCount / size) * 100;
+		
+		System.out.println("DBSCAN COVERAGE: " + coverage + "%");
 		
 		/*-------------------------------------------------------WRITING THE JSON FILE-------------------------------------------------------*/
 		
 		// Get the final centroids produced by DBSCAN
-		ArrayList<Point2D.Double> DBSCANCentroids = testDBSCAN.generatePOIS();
+		//ArrayList<Point2D.Double> DBSCANCentroids = testDBSCAN.generatePOIS();
 		
 		// Produced POIs
 		ArrayList<POI> DBSCANPOIs = new ArrayList<POI>();
@@ -476,14 +551,20 @@ public class RunClustering {
 //		 * Own Algorithm
 //		 */
 //		
+		
+		/**-------------------------------------------------------START OF OWN ALGORITHM-------------------------------------------------------*/
 		System.out.println("---OWN ALGORITHM---");
+		
+		/*-------------------------------------------------------PERFORMING OWN ALGORITHM CLUSTERING-------------------------------------------------------*/
 		
 		// Create new Own Algorithm
 		// Box sizes should be set based on Geofence radius for application
 		
 		//OwnAlgorithm(double maxX, double maxY, double originX, double originY, ArrayList<Point2D.Double> points, double boxWidth, double boxHeight, int boxRows, int boxColumns) 
 		//OwnAlgorithm testOwnAlgorithm = new OwnAlgorithm(16, 16, 0, 0, locations, 2, 2, 8, 8);
-		OwnAlgorithm testOwnAlgorithm = new OwnAlgorithm(51.244957, -0.583740, 51.240799, -0.593499, locations, 8, 8);
+		OwnAlgorithm testOwnAlgorithm = new OwnAlgorithm(51.3, -0.58, 51.2, -0.6, locations, 10, 16);
+		
+		System.out.println(memories);
 		
 		testOwnAlgorithm.generateCentroids();
 		
@@ -502,6 +583,53 @@ public class RunClustering {
 		testOwnAlgorithm.printAllClusters();
 		
 		System.out.println("---");
+		
+		/*-------------------------------------------------------CALCULATING SILHOUETTE COEFFICIENT-------------------------------------------------------*/
+		
+		double silhouetteCoefficientCOLBOB= 0.0;
+		
+		ArrayList<Point2D.Double> COLBOBCentroids = testOwnAlgorithm.getCentroids();
+		
+		ArrayList<ArrayList<Point2D.Double>> COLBOBClusters = testOwnAlgorithm.getClusters();
+		
+		int iteratorCOLBOB = 0;
+		
+		for (Point2D.Double c : COLBOBCentroids) {
+			
+			for (Point2D.Double p : COLBOBClusters.get(iteratorCOLBOB)) {
+				
+				ArrayList<Point2D.Double> COLBOBcluster = COLBOBClusters.get(iteratorCOLBOB);
+				
+				// SilhouetteCoefficient(Double point, ArrayList<Double> cluster, ArrayList<ArrayList<Double>> clusters, ArrayList<Double> centroids)
+				SilhouetteCoefficient scCOLBOB = new SilhouetteCoefficient(p, COLBOBcluster, COLBOBClusters, COLBOBCentroids);
+				
+				silhouetteCoefficientCOLBOB = silhouetteCoefficientCOLBOB + scCOLBOB.calculateSilhouetteCoefficient();
+				
+				pointCount++;
+				
+			}
+			
+			iteratorCOLBOB++;
+			
+		}
+		
+		
+		silhouetteCoefficientCOLBOB = silhouetteCoefficientCOLBOB / locations.size();
+		
+		System.out.println("COLBOB OVERALL AVERAGE SILHOUETTE COEFFICIENT: " + silhouetteCoefficientCOLBOB);
+		
+		/*-------------------------------------------------------CALCULATING DAVIES-BOULDIN INDEX-------------------------------------------------------*/
+		
+		DaviesBouldinIndex COLBOBDB = new DaviesBouldinIndex(COLBOBCentroids, COLBOBClusters);
+		
+		System.out.println("OWN ALGORITHM DB: " + COLBOBDB.calculateDaviesBouldinIndex());
+		
+		/*-------------------------------------------------------WRITING THE JSON FILE-------------------------------------------------------*/
+		
+		
+		
+		
+		/**-------------------------------------------------------END OF OWN ALGORITHM-------------------------------------------------------*/
 		
 	}
 

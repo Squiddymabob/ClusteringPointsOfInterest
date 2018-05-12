@@ -211,7 +211,8 @@ public class DBSCAN {
 	}
 	
 	/**
-	 *  To generate centroids for each cluster so that these can be POIs
+	 * To generate centroids for each cluster so that these can be POIs
+	 * @return an ArrayList of all the centroids with index 0 being the centroid for index 0 of the output of DBSCAN
 	 */
 	public ArrayList<Point2D.Double> generatePOIS() {
 		
@@ -236,6 +237,7 @@ public class DBSCAN {
 			
 			sumX = sumX / count;
 			sumY = sumY /count;
+			
 			Point2D.Double newPoint = new Point2D.Double(sumX,sumY);
 			centroids.add(newPoint);
 			

@@ -149,11 +149,6 @@ public class OwnAlgorithm {
 		}
 		row = (int) Math.ceil((pointY - originY) / boxHeight);
 		
-		//System.out.println(column);
-		//System.out.println(row);
-		
-		//System.out.println(centroids.size());
-		
 		//System.out.println(boxColumns * (row - 1) + (column - 1));
 		// To get correct index in array of centroids if not in the first row, add all boxes from rows below and additional boxes from columns left of point
 		nearestCentroid = centroids.get(boxColumns * (row - 1) + (column - 1));
@@ -174,7 +169,6 @@ public class OwnAlgorithm {
 		ArrayList<ArrayList<Point2D.Double>> createdClusters = new ArrayList<ArrayList<Point2D.Double>>();
 		
 		Point2D.Double currentCentroid = null;
-
 		
 		// For current centroid, find all points with that as nearest centroid, add all these to arraylist, then add this arraylist to clusters
 		for (int i = 0; i < centroids.size(); i++) {
@@ -195,9 +189,8 @@ public class OwnAlgorithm {
 				createdClusters.add(currentCluster);
 			}
 			
-			//System.out.println("CURRENT CLUSTER: " + currentCluster);
-			
 		}
+		
 		
 		clusters = createdClusters;
 	
