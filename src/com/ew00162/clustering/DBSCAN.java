@@ -30,7 +30,7 @@ import java.util.Map;
  *         STEP 1: Randomly choose a point p
  *         STEP 2: Retrieve all points that are DENSITY-REACHABLE from p with respect to eps and minPoints
  *         STEP 3: If p is a CORE POINT, a cluster is formed
- *         STEP 4: If p is a BORDER POINT, no points are DENSITY-REACHABLE from p, so vist next point
+ *         STEP 4: If p is a BORDER POINT, no points are DENSITY-REACHABLE from p, so visit next point
  *         STEP 5: Repeat until all data points have been processed
  *         
  *         DBSCAN is not a centroid-based clustering algorithm so clusters will have no centroids
@@ -40,36 +40,31 @@ import java.util.Map;
 
 public class DBSCAN {
 
-	// Min distance between neighbours
+	/* Min distance between neighbours */
 	private double eps = 0;
 	
-	// Min points to form dense region
+	/* Min points to form dense region */
 	private int minPoints = 0;
 	
-	// List of points
+	/* List of points */
 	private ArrayList<Point2D.Double> points = new ArrayList<Point2D.Double>();
 	
-	// Possible point statuses
+	/* Possible point statuses */
 	private enum Status {
 		CLUSTER, OUTLIER
 	}
 	
-	// For setting the status of each visited point
+	/* For setting the status of each visited point */
 	Map<Point2D.Double, Status> visitedPoints = new HashMap<Point2D.Double, Status>();
 	
-	// For finding centroids for POI
+	/* For finding centroids for POI */
 	private ArrayList<ArrayList<Point2D.Double>> output = new ArrayList<ArrayList<Point2D.Double>>();
 	
 	/**
-	 * Constructor
+	 * Constructor for DBSCAN
 	 * 
-	 * @param dist
 	 * @param eps
 	 * @param minPoints
-	 * @param maxY
-	 * @param maxX
-	 * @param originX
-	 * @param originY
 	 * @param points
 	 */
 	public DBSCAN(double eps, int minPoints, ArrayList<Point2D.Double> points) {
@@ -122,7 +117,6 @@ public class DBSCAN {
 	
 	/**
 	 * Perform DBSCAN
-	 * 
 	 * @return clusters
 	 */
 	public ArrayList<ArrayList<Point2D.Double>> performDBSCAN() {

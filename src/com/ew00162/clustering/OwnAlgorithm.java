@@ -9,18 +9,12 @@ import java.util.ArrayList;
 /**
  * @author Emily
  * 
- *         STEP 1: Generate initial centroids, one in centre of each square
+ *         STEP 1: Generate initial centroids, one in centre of each box
  *         STEP 2: Find nearest centroid to each point and assign the point to the centroid to form clusters
- *         STEP 3: Average the clusters to find the new centroid for each square
+ *         STEP 3: Average the clusters to find the new centroid for each box
  *
  */
 public class OwnAlgorithm {
-	
-	
-	// Max X and Y bounds of graph
-	// Max lat and long for GPS
-	private double maxY = 0;
-	private double maxX = 0;
 
 	// Origins
 	private double originX = 0;
@@ -33,9 +27,6 @@ public class OwnAlgorithm {
 	private double boxWidth = 0.0;
 	private double boxHeight = 0.0;
 	
-	private double border = 0.0;
-	//private double innerSquareSize = squareSize - border;
-	
 	// Number of squares
 	private int boxRows = 0;
 	private int boxColumns = 0;
@@ -46,14 +37,12 @@ public class OwnAlgorithm {
 	// Clusters
 	private ArrayList<ArrayList<Point2D.Double>> clusters = new ArrayList<ArrayList<Point2D.Double>>();
 	
-	
 	/**
 	 * @return the clusters
 	 */
 	public ArrayList<ArrayList<Point2D.Double>> getClusters() {
 		return clusters;
 	}
-
 
 	/**
 	 * @return the centroids
@@ -73,8 +62,6 @@ public class OwnAlgorithm {
 	 */
 	public OwnAlgorithm(double maxX, double maxY, double originX, double originY, ArrayList<Point2D.Double> points, int boxRows, int boxColumns) {
 		super();
-		this.maxY = maxY;
-		this.maxX = maxX;
 		this.originX = originX;
 		this.originY = originY;
 		this.points = points;
@@ -87,7 +74,7 @@ public class OwnAlgorithm {
 
 	/**
 	 * STEP 1
-	 * Generate centroids in centre of each square
+	 * Generate centroids in centre of each box
 	 * Generates row by row
 	 */
 	public void generateCentroids() {
@@ -111,19 +98,14 @@ public class OwnAlgorithm {
 				newX = newX + boxWidth;
 			
 				count++;
-				
 			}
-		
 			newY = newY + boxHeight;
 			newX = originX + (boxWidth/2);
-		
 		}
-		
 		System.out.println("GENERATED CENTROIDS: " + centroids);
 		
 		// TESTING
-		System.out.println("COUNT: " + count);
-		
+		System.out.println("COUNT: " + count);	
 	}
 	
 	/**
@@ -149,14 +131,12 @@ public class OwnAlgorithm {
 		}
 		row = (int) Math.ceil((pointY - originY) / boxHeight);
 		
-		//System.out.println(boxColumns * (row - 1) + (column - 1));
 		// To get correct index in array of centroids if not in the first row, add all boxes from rows below and additional boxes from columns left of point
 		nearestCentroid = centroids.get(boxColumns * (row - 1) + (column - 1));
 
 		// Will always return bottom left box if in 4 way intersection between boxes
 		// This stops it going outside bounds if point added is at (maxX, maxY)
 		return nearestCentroid;
-		
 	}
 	
 	/**
@@ -170,7 +150,7 @@ public class OwnAlgorithm {
 		
 		Point2D.Double currentCentroid = null;
 		
-		// For current centroid, find all points with that as nearest centroid, add all these to arraylist, then add this arraylist to clusters
+		// For current centroid, find all points with that as nearest centroid, add all these to ArrayList, then add this ArrayList to clusters
 		for (int i = 0; i < centroids.size(); i++) {
 			
 			ArrayList<Point2D.Double> currentCluster = new ArrayList<>();
@@ -187,15 +167,11 @@ public class OwnAlgorithm {
 			
 			if (!currentCluster.isEmpty()) {
 				createdClusters.add(currentCluster);
-			}
-			
+			}	
 		}
 		
-		
 		clusters = createdClusters;
-	
 	}
-	
 	
 	/**
 	 * STEP 3
@@ -227,16 +203,10 @@ public class OwnAlgorithm {
 				
 				newCentroids.add(newCentroid);
 				
-			}
-			
-
-			
-		}
-		
+			}	
+		}	
 		centroids = newCentroids;
-		
 	}
-	
 	
 	
 	/**
@@ -248,13 +218,7 @@ public class OwnAlgorithm {
 			
 			System.out.println("CLUSTER FOR CENTROID " + centroids.get(i) + ": " + clusters.get(i));
 
-		}
-		
-		
+		}			
 	}
-	
-	
-	
-	
 
 }

@@ -27,7 +27,7 @@ public class POI {
 
     private String images;
     
-    // SETTERS
+    /**=============================================== SETTERS ===============================================**/
 
 	/**
 	 * @param id the id to set

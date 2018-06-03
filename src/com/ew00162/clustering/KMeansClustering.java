@@ -103,8 +103,6 @@ public class KMeansClustering {
 			// Create random X and Y values for the new point
 			// Values will be inside max range of graph
 			// Random r = new Random();
-			//double randomX = ThreadLocalRandom.current().nextDouble(originX, maxX);
-			//double randomY = ThreadLocalRandom.current().nextDouble(originY, maxY);
 			
 			double randomX = (Math.random() * (maxX - originX)) + originX;
 			double randomY = (Math.random() * (maxY - originY)) + originY;
@@ -232,7 +230,6 @@ public class KMeansClustering {
 
 		ArrayList<Point2D.Double> clusterValues = new ArrayList<Point2D.Double>();
 
-		// Assign to HashMap clusters
 		// Index(i) of nearestCentroids is the nearest centroid for index(i) of points
 		for (int i = 0; i < points.size(); i++) {
 

@@ -15,16 +15,21 @@ import java.util.ArrayList;
  */
 public class SilhouetteCoefficient {
 	
+	/* a point */
 	private Point2D.Double point;
 	
+	/* ArrayList of points for a cluster */
 	private ArrayList<Point2D.Double> cluster;
 	
+	/* ArrayList of clusters */
 	private ArrayList<ArrayList<Point2D.Double>> clusters;
 	
+	/* ArrayList of centroids */
 	private ArrayList<Point2D.Double> centroids;
 	
 	
 	/**
+	 * Constructor for the Silhouette Coefficient
 	 * @param point
 	 * @param cluster
 	 * @param clusters
@@ -48,12 +53,14 @@ public class SilhouetteCoefficient {
 		
 		double total = 0.0;
 		
+		// For each point in the cluster that the point is in, add the distance between it and the point to a total
 		for(Point2D.Double p : cluster) {
 			
 			total = total + p.distance(point);
 			
 		}
 		
+		// Divide the total by the size of the cluster to get an average distance
 		double a = total / cluster.size();
 		
 		return a;
@@ -69,9 +76,12 @@ public class SilhouetteCoefficient {
 		
 		Point2D.Double secondNearestCentroid = centroids.get(0);
 		ArrayList<Point2D.Double> nearestCluster = clusters.get(0);
-		// use parallel arrays
+		
+		// Use parallel arrays
 		for (int i = 0; i < centroids.size(); i++)
 		{
+			
+			// As long as the cluster doesn't contain the point, it may be the nearest neighbouring cluster
 			if(!(clusters.get(i).contains(point)))
 			{
 				if (centroids.get(i).distance(point) >= secondNearestCentroid.distance(point))
@@ -95,24 +105,29 @@ public class SilhouetteCoefficient {
 		
 		double total = 0.0;
 		
+		// For each point in the nearest neighbouring cluster to the point, add the distance between it and the point to a total
 		for (Point2D.Double p : getNearestNeighbouringCluster()) {
 			
 			total = total + p.distance(point);
 			
 		}
 		
+		// Divide the total by the size of the nearest neighbouring cluster to get an average distance
 		double b = total / getNearestNeighbouringCluster().size();
 		
 		return b;
 		
 	}
 	
-	
+	/**
+	 * Calculate the Silhouette Coefficient
+	 * @return the Silhouette Coefficient for the given data point
+	 */
 	public double calculateSilhouetteCoefficient() {
 		
 		double silhouetteCoefficient = 0.0;
 		
-		
+		// Silhouette Coefficient equation
 		silhouetteCoefficient = (bCalculate() - aCalculate()) / (Math.max(bCalculate(), aCalculate()));
 		
 		

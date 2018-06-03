@@ -9,17 +9,21 @@ import java.util.Collections;
 
 /**
  * @author Emily
+ * 
+ * Calculates the Davies-Bouldin Index for the specified dataset
  *
  */
 public class DaviesBouldinIndex {
 	
-	
+	/* ArrayList of centroids */
 	private ArrayList<Point2D.Double> centroids;
 	
+	/* ArrayList of clusters */
 	private ArrayList<ArrayList<Point2D.Double>> clusters;
 	
 	
 	/**
+	 * Constructor for the DB Index
 	 * @param centroids
 	 * @param clusters
 	 */
@@ -33,7 +37,7 @@ public class DaviesBouldinIndex {
 	 * Calculate distance between every point in the ith cluster to the ith centroid
 	 * @param iCluster
 	 * @param iCentroid
-	 * @return
+	 * @return average distance between every point of iCluster to iCentroid
 	 */
 	private double calculateAverageDistance(ArrayList<Point2D.Double> iCluster, Point2D.Double iCentroid) {
 		
@@ -48,6 +52,12 @@ public class DaviesBouldinIndex {
 		return sum / size;
 	}
 	
+	/**
+	 * Calculate distance between one centroid and another
+	 * @param iCentroid
+	 * @param jCentroid
+	 * @return distance between iCentroid and jCentroid
+	 */
 	private double calculateCentroidDistance(Point2D.Double iCentroid, Point2D.Double jCentroid) {
 		
 		return iCentroid.distance(jCentroid);
@@ -56,7 +66,7 @@ public class DaviesBouldinIndex {
 	
 	/**
 	 * Calculate Davies-Bouldin Index
-	 * @return
+	 * @return DB Index of given clustering algorithm and dataset
 	 */
 	public double calculateDaviesBouldinIndex() {
 		
@@ -85,7 +95,16 @@ public class DaviesBouldinIndex {
 							
 			}
 			
-			sum = sum + Collections.max(DB);
+			try {
+				
+				// Add the maximum value for the ith centroid to the total sum
+				sum = sum + Collections.max(DB);
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				// If only one cluster is generated, there are no neighbouring clusters so the DB Index cannot be calculated
+				System.out.println("No neighbouring clusters, so cannot calculate DB!");
+			}
 			
 		}
 		
